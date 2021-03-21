@@ -15,10 +15,10 @@
   ],
   "scripts": {
     "build": "tsc",
-    "build:docker": "docker build --no-cache -t polygl0t/c0mmander:latest .",
+    "build:docker": "npm run build && docker build --no-cache -t polygl0t/c0mmander:latest .",
     "build:docker:push": "docker push polygl0t/c0mmander:latest",
     "prebuild": "rm -rf ./dist",
-    "start": "node dist/index.ts",
+    "start": "node dist/index.js",
     "start:debug": "ts-node src/index.ts",
     "start:example": "node bin/tp-server ../examples/config.json",
     "lint": "eslint . --ext .ts",
@@ -38,6 +38,7 @@
   },
   "homepage": "https://github.com/moonthug/tp-server#readme",
   "devDependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/koa": "^2.13.1",
     "@types/koa-router": "^7.4.1",
     "@types/node": "^14.14.27",
