@@ -7,7 +7,11 @@ import Koa, { Middleware } from 'koa';
  */
 export const getC0mmandsMiddleware: Middleware = async (ctx, next) => {
   try {
-    ctx.body = await ctx.c0mmandService.getC0mmands();
+    const commands = await ctx.c0mmandService.getC0mmands();
+    ctx.body = {
+      count: commands.length,
+      commands
+    };
   } catch (e) {
     throw e;
   }

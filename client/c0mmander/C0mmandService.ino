@@ -13,7 +13,7 @@ class C0mmandService {
     const char* _baseUrl;
     int _state;
 
-    String _request(String path) {
+    JSONVar _request(String path) {
       HTTPClient http;
 
       String url = this->_baseUrl + path;
@@ -23,21 +23,27 @@ class C0mmandService {
       
       httpResponseCode = http.GET();
 
-      if (httpResponseCode > 0) {
-        Serial.print("HTTP Response code: ");
-        Serial.println(httpResponseCode);
-        String payload = http.getString();
-        Serial.println(payload);
-      }
-      else {
+      if (httpResponseCode < 0) {
         Serial.print("Error code: ");
         Serial.println(httpResponseCode);
+        return null;
       }
+
+      String input = http.getString();
+      Serial.println(input);
+      JSONVar response = JSON.parse(input);
       
+      if (JSON.typeof(response) == "undefined") {
+        Serial.println("Parsing input failed!");
+        return null;
+      }
+
       delay(1000);
       
       // Free resources
       http.end();
+
+      return response;
     }
     
   public:
@@ -48,7 +54,11 @@ class C0mmandService {
     
     String fetchC0mmands() {
       this->_state = FETCHING_C0MMANDS;
-      this->_request("/c0mmands");
+      JSONVar response = this->_request("/c0mmands");
+
+      Serial.println(response["count"]);
+      Serial.println(response[0]["name"]);
+      
       this->_state = FETCHING_C0MMANDS_SUCCESS;
     }
 
