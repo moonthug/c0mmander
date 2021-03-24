@@ -1,12 +1,16 @@
 import { C0mmand, Id } from './c0mmands/C0mmand';
 import { printShoppingList } from './c0mmands/printShoppingList';
+import { findPhone } from './c0mmands/findPhone';
+import { dummy } from './c0mmands/dummy';
 
 export class C0mmandService {
   private readonly _c0mmands: C0mmand[];
 
   constructor() {
     this._c0mmands = [
-      printShoppingList
+      printShoppingList,
+      findPhone,
+      dummy
     ];
 
     this._c0mmands.forEach(c0mmand => {
@@ -29,7 +33,7 @@ export class C0mmandService {
     const c0mmand = this._c0mmands.find(command => command.id === id);
 
     if (!c0mmand) {
-      throw new Error('Command not found!');
+      throw new Error('c0mmand not found!');
     }
 
     return await c0mmand.execute(process.env);

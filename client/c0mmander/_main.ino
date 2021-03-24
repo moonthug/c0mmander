@@ -1,92 +1,77 @@
 #include <WiFi.h>
 #include <LiquidCrystal_I2C.h>
 
-#define ROTARY_PIN 33
-#define BUTTON_PIN 26
-
-
-const char* ssid     = "";
+const char* ssid = "";
 const char* password = "";
+///const char* c0mmandBaseUrl = "http://192.168.1.50:10010";
+const char* c0mmandBaseUrl = "http://192.168.1.13:3000";
 
-const char* c0mmandBaseUrl = "http://192.168.1.23:3000";
+int frame = 0;
+int c0mmandId = 0;
+int c0mmandCount = 0;
 
-int buttonState = 0;
-int rotaryState = 0;
-
-String c0mmands;
-int c0mmand = 0;
-
-C0mmandService c0mmandService = C0mmandService(c0mmandBaseUrl);
-RotarySwitch rotarySwitch = RotarySwitch(ROTARY_PIN);
+bool loading = false;
 
 LiquidCrystal_I2C lcd(0x27, 20, 4);
 
+Display display = Display(&lcd);
+C0mmandService c0mmandService = C0mmandService(c0mmandBaseUrl);
+RotarySwitch rotarySwitch = RotarySwitch(ROTARY_PIN);
+
 void setup() {
   Serial.begin(115200);
+  while (!Serial) {};
+
+//  lcd.createChar(0, arrow1);
+//  lcd.createChar(1, arrow2);
+  display.init();
   
   pinMode(BUTTON_PIN, INPUT);
-    
-  lcd.init();
-  lcd.backlight();
 
   WiFi.begin(ssid, password);
-
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Connnecting to wifi");
-  lcd.setCursor(0, 1);
-  lcd.print(ssid);
-  lcd.setCursor(0, 2);
   
+  display.printStatus("Connecting to wifi..");
   while (WiFi.status() != WL_CONNECTED) {
-    delay(50);
-    lcd.print("...");
+    delay(100);
+  }
+  delay(500);
+
+  loading = true;
+  while(c0mmandCount == 0) {
+    display.printStatus("Fetch c0mmands...");
+    delay(500);
+    c0mmandCount = c0mmandService.fetchC0mmands();
+
+    if (c0mmandCount == 0) {
+      display.printStatus("Failed to fetch! Retrying...");
+      delay(5000);
+    }
   }
   
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("Connected!");
+  Serial.print("C0mmands Received: ");
+  Serial.println(c0mmandCount);
   
+  display.printStatus("c0mmands OK!");
   delay(1000);
-
-  c0mmandService.fetchC0mmands();
 }
 
 void loop() {
-
-  lcd.setCursor(0, 0);
-  switch(c0mmandService.getState()) {
-    case READY:
-      lcd.print("FREADY...");
-      break;
-    case FETCHING_C0MMANDS:
-      lcd.print("Fetching c0mmands...");
-      break;
-    case FETCHING_C0MMANDS_SUCCESS:
-      lcd.print("Fetching c0mmands success!");
-      break;
-    case EXECUTING_C0MMAND:
-      lcd.print("Executing c0mmand...");
-      break;
-    case EXECUTING_C0MMAND_SUCCESS:
-      lcd.print("Executing c0mmand success!");
-      break;
-  }
-
-  buttonState = digitalRead(BUTTON_PIN);
-
+  // Handle rotary switch value change
   if (rotarySwitch.isNewValue()) {      
-      c0mmand = rotarySwitch.getValue();
-      lcd.clear();
-      lcd.setCursor(0, 2);
-      lcd.print(c0mmand);
+    lcd.clear();
+    c0mmandService.setC0mmandId(rotarySwitch.getValue());
   }
 
-  if (buttonState == HIGH) {
+  // Handle button press    
+  if (digitalRead(BUTTON_PIN) == HIGH) {
     if (c0mmandService.getState() != EXECUTING_C0MMAND) {
-      lcd.clear();
-      c0mmandService.executeC0mmand(c0mmand);
-      delay(50);
+      c0mmandService.executeC0mmand();
+      display.printStatus("Executing c0mmand:");
+      delay(1000);
     }
   }
+
+  display.printC0mmand(c0mmandService.getC0mmandName());
+  
+  frame++;
 }

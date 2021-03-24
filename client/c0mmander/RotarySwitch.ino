@@ -1,5 +1,5 @@
-#define CHANNEL_COUNT 12
-#define READING_COUNT 15
+#define CHANNEL_COUNT COMMAND_COUNT
+#define READING_COUNT 5
 
 class RotarySwitch {
   private:
@@ -28,15 +28,15 @@ class RotarySwitch {
 
       for(int i = 0; i < READING_COUNT - 1; i++) {
         // Shift array
-        this->_readings[i] = this->_readings[i+1];
+        _readings[i] = _readings[i+1];
 
         // Add to total;
-        total += this->_readings[i];
+        total += _readings[i];
       }
       
-      int currAnalogVal = analogRead(this->_pin);
+      int currAnalogVal = analogRead(_pin);
 
-      this->_readings[READING_COUNT - 1] = currAnalogVal;
+      _readings[READING_COUNT - 1] = currAnalogVal;
       total += currAnalogVal;
 
       return floor(total / READING_COUNT);
@@ -44,34 +44,34 @@ class RotarySwitch {
   
   public:
     RotarySwitch(int pin) {
-      this->_pin = pin;
-      this->_value = 0;
+      _pin = pin;
+      _value = 0;
 
       for (int i = 0; i < READING_COUNT; i++) {
-        this->_readings[i] = 0;
+        _readings[i] = 0;
       }
     }
 
     bool isNewValue() {
-      int currentValue = this->_value;
-      int currAvgVal = this->_getReading();
-      int diff = currAvgVal - this->_lastAvgVal;
+      int currentValue = _value;
+      int currAvgVal = _getReading();
+      int diff = currAvgVal - _lastAvgVal;
 
       if (abs(diff) > 10) {
         for(int i = 0; i < CHANNEL_COUNT; i++) {
-          if (currAvgVal >= this->_channels[i][0] && currAvgVal < this->_channels[i][1]) {
-            this->_value = i;
+          if (currAvgVal >= _channels[i][0] && currAvgVal < _channels[i][1]) {
+            _value = i;
             break;
           }
         }
       }
       
-      this->_lastAvgVal = currAvgVal;
+      _lastAvgVal = currAvgVal;
       
-      return this->_value != currentValue;
+      return _value != currentValue;
     }
 
     int getValue() {
-      return this->_value;
+      return _value;
     }
 };
