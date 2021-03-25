@@ -14,7 +14,9 @@ class Display {
 
     void init() {
       _lcd->init();
-      _lcd->backlight();
+      _lcd->backlight();     
+//    _lcd->createChar(0, arrow1);
+//    _lcd->createChar(1, arrow2);
     }
 
     void printStatus(String status) {

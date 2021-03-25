@@ -2,6 +2,7 @@ import { C0mmand, Id } from './c0mmands/C0mmand';
 import { printShoppingList } from './c0mmands/printShoppingList';
 import { findPhone } from './c0mmands/findPhone';
 import { dummy } from './c0mmands/dummy';
+import { printT0d0s } from './c0mmands/printT0d0s';
 
 export class C0mmandService {
   private readonly _c0mmands: C0mmand[];
@@ -9,6 +10,7 @@ export class C0mmandService {
   constructor() {
     this._c0mmands = [
       printShoppingList,
+      printT0d0s,
       findPhone,
       dummy
     ];

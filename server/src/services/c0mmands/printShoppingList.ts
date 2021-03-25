@@ -50,7 +50,7 @@ export const printShoppingList: C0mmand = {
       'text ""',
       'text ""',
       'cut'
-    ];
+    ].join('\n');
 
     try {
       const { data } = await axios(
@@ -59,7 +59,7 @@ export const printShoppingList: C0mmand = {
           headers: {
             'content-type': 'text/plain'
           },
-          data: instructions.join('\n'),
+          data: instructions,
           method: 'POST'
         }
       );

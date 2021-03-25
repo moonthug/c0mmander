@@ -9,7 +9,7 @@ interface Env {
 
 export const dummy: C0mmand = {
   name: 'Dummy Command',
-  id: 2,
+  id: 3,
   requiredEnv: [],
   execute: async (env: Env) => {
     const { TP_SERVER_URL } = env;
@@ -17,7 +17,7 @@ export const dummy: C0mmand = {
     const instructions = [
       'style "normal"',
       'align "lt"',
-      'size "4" "4"',
+      'size "1" "0.5"',
       'text "Dummy!"',
       'text ""',
       'text ""',
