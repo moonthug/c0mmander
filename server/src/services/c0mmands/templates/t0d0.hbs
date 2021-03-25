@@ -1,0 +1,64 @@
+style "normal"
+align "lt"
+size "3" "2"
+text "T0D0!"
+size "0.5" "0.5"
+text "{{date}}"
+text ""
+size "2" "1"
+text "* Do Stuff"
+{{#each doStuffCards }}
+  {{!-- Spacer --}}
+  size "0.5" "0.5"
+  text ""
+
+  {{!-- Has checklists --}}
+  size "1" "1"
+  text "{{this.name}}"
+
+  {{#if this.checklists }}
+    {{#each this.checklists }}
+      size "1" "0.5"
+      text "  {{this.name}}"
+
+      {{#each this.checkItems }}
+        size "0.5" "0.5"
+        {{#if this.isComplete}}
+          text "    [X] {{this.name}}"
+        {{else}}
+          text "    [ ] {{this.name}}"
+        {{/if}}
+      {{/each}}
+
+    {{/each}}
+
+  {{!-- No checklists --}}
+  {{else}}
+    size "0.5" "0.5"
+    text "  [ ] {{this.name}}"
+  {{/if}}
+{{/each}}
+size "2" "1"
+text ""
+text ""
+text "! On Hold"
+text ""
+size "0.5" "0.5"
+{{#each onHoldCards }}
+  text "{{this.name}}"
+{{/each}}
+
+size "2" "1"
+text ""
+text ""
+text "$ Buy Stuff"
+text ""
+size "0.5" "0.5"
+{{#each buyStuffCards }}
+  text "[ ] {{this.name}}"
+{{/each}}
+text ""
+text ""
+text ""
+text ""
+cut

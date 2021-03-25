@@ -13,7 +13,9 @@ export class C0mmandService {
       printT0d0s,
       findPhone,
       dummy
-    ];
+    ].sort((c0mmandA, c0mmandB) => {
+      return c0mmandA.id - c0mmandB.id
+    })
 
     this._c0mmands.forEach(c0mmand => {
       if (!c0mmand.requiredEnv.every(key => Object.keys(process.env).includes(key))) {
