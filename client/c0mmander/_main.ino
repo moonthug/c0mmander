@@ -1,10 +1,10 @@
 #include <WiFi.h>
 #include <LiquidCrystal_I2C.h>
 
-const char* ssid = "";
-const char* password = "";
-///const char* c0mmandBaseUrl = "http://192.168.1.50:10010";
-const char* c0mmandBaseUrl = "http://192.168.1.13:3000";
+const char* ssid = "EGGS";
+const char* password = "quaintbreeze183";
+const char* c0mmandBaseUrl = "http://192.168.1.50:10010";
+//const char* c0mmandBaseUrl = "http://192.168.1.13:3000";
 
 int frame = 0;
 int c0mmandId = 0;
@@ -22,14 +22,13 @@ void setup() {
   Serial.begin(115200);
   while (!Serial) {};
 
-//  lcd.createChar(0, arrow1);
-//  lcd.createChar(1, arrow2);
   display.init();
   
   pinMode(BUTTON_PIN, INPUT);
 
   WiFi.begin(ssid, password);
-  
+  WiFi.setHostname("c0mmander");
+
   display.printStatus("Connecting to wifi..");
   while (WiFi.status() != WL_CONNECTED) {
     delay(100);
@@ -52,7 +51,7 @@ void setup() {
   Serial.println(c0mmandCount);
   
   display.printStatus("c0mmands OK!");
-  delay(1000);
+  delay(500);
 }
 
 void loop() {
@@ -65,9 +64,9 @@ void loop() {
   // Handle button press    
   if (digitalRead(BUTTON_PIN) == HIGH) {
     if (c0mmandService.getState() != EXECUTING_C0MMAND) {
+      display.printStatus("Executing c0mmand");
       c0mmandService.executeC0mmand();
-      display.printStatus("Executing c0mmand:");
-      delay(1000);
+      delay(500);
     }
   }
 
