@@ -10,6 +10,7 @@ interface Env {
   TRELLO_APP_TOKEN: string;
   TRELLO_TODO_LIST_ID: string;
   TRELLO_BUY_LIST_ID: string;
+  TRELLO_HOLD_LIST_ID: string;
   TP_SERVER_URL: string;
 }
 
@@ -45,14 +46,22 @@ export const printT0d0s: C0mmand = {
     'TRELLO_APP_TOKEN',
     'TRELLO_TODO_LIST_ID',
     'TRELLO_BUY_LIST_ID',
+    'TRELLO_HOLD_LIST_ID',
     'TP_SERVER_URL'
   ],
   execute: async (env: Env) => {
-    const { TRELLO_APP_KEY, TRELLO_APP_TOKEN, TRELLO_TODO_LIST_ID, TRELLO_BUY_LIST_ID, TP_SERVER_URL } = env;
+    const {
+      TRELLO_APP_KEY,
+      TRELLO_APP_TOKEN,
+      TRELLO_TODO_LIST_ID,
+      TRELLO_BUY_LIST_ID,
+      TRELLO_HOLD_LIST_ID,
+      TP_SERVER_URL
+    } = env;
 
     const client = new Trello(TRELLO_APP_KEY, TRELLO_APP_TOKEN);
 
-    const doStuffCards = await client.getCardsOnList('5f7723264eca846e30d3bb41');
+    const doStuffCards = await client.getCardsOnList(TRELLO_TODO_LIST_ID);
     const cardsWithChecklists = await Promise.all(
       doStuffCards.map(async (card) => {
         return {
@@ -73,14 +82,14 @@ export const printT0d0s: C0mmand = {
         }
       })
     );
-    const onHoldCards = await client.getCardsOnList(TRELLO_TODO_LIST_ID);
     const buyStuffCards = await client.getCardsOnList(TRELLO_BUY_LIST_ID);
+    const onHoldCards = await client.getCardsOnList(TRELLO_HOLD_LIST_ID);
 
     const instructions = template({
       date: getNiceDate(),
       doStuffCards: cardsWithChecklists,
-      onHoldCards,
       buyStuffCards,
+      onHoldCards
     })
       .split('\n')
       .map(line => line.trim())

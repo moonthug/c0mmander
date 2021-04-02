@@ -38,15 +38,6 @@ text "* Do Stuff"
     text "  [ ] {{this.name}}"
   {{/if}}
 {{/each}}
-size "2" "1"
-text ""
-text ""
-text "! On Hold"
-text ""
-size "0.5" "0.5"
-{{#each onHoldCards }}
-  text "{{this.name}}"
-{{/each}}
 
 size "2" "1"
 text ""
@@ -59,6 +50,18 @@ size "0.5" "0.5"
 {{/each}}
 text ""
 text ""
+
+size "2" "1"
 text ""
+text ""
+text "! On Hold"
+text ""
+size "0.5" "0.5"
+{{#each onHoldCards }}
+  text "{{this.name}}"
+{{/each}}
+text ""
+text ""
+
 text ""
 cut
