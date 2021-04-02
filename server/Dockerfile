@@ -2,7 +2,7 @@
 # Base Node
 FROM mhart/alpine-node:12 AS base
 RUN apk add --no-cache tini
-WORKDIR /opt/appFROM
+WORKDIR /opt/app
 ENTRYPOINT ["/sbin/tini", "--"]
 COPY package*.json ./
 
@@ -18,9 +18,7 @@ RUN npm ci
 # Build
 FROM base AS build
 COPY --from=dependencies /opt/app/node_modules ./node_modules
-COPY tsconfig.json .
-COPY src ./src
-COPY types ./types
+COPY . .
 RUN npm run build
 
 #
