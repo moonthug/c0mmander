@@ -65,6 +65,7 @@ export const printShoppingList: C0mmand = {
       );
       return data;
     } catch (e) {
+      console.error(e);
       console.log('Print fail');
     }
   }

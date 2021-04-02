@@ -14,10 +14,10 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc",
-    "build:docker": "npm run build && docker build --no-cache -t polygl0t/c0mmander:latest .",
-    "build:docker:push": "docker push polygl0t/c0mmander:latest",
     "prebuild": "rm -rf ./dist",
+    "build": "tsc && cp -R ./src/services/c0mmands/templates ./dist/services/c0mmands/templates",
+    "build:docker": "DOCKER_BUILDKIT=0 docker build -t polygl0t/c0mmander:latest .",
+    "build:docker:push": "docker push polygl0t/c0mmander:latest",
     "start": "node dist/index.js",
     "start:debug": "ts-node src/index.ts",
     "start:example": "node bin/tp-server ../examples/config.json",

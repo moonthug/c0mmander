@@ -8,6 +8,8 @@ import axios from 'axios';
 interface Env {
   TRELLO_APP_KEY: string;
   TRELLO_APP_TOKEN: string;
+  TRELLO_TODO_LIST_ID: string;
+  TRELLO_BUY_LIST_ID: string;
   TP_SERVER_URL: string;
 }
 
@@ -41,10 +43,12 @@ export const printT0d0s: C0mmand = {
   requiredEnv: [
     'TRELLO_APP_KEY',
     'TRELLO_APP_TOKEN',
+    'TRELLO_TODO_LIST_ID',
+    'TRELLO_BUY_LIST_ID',
     'TP_SERVER_URL'
   ],
   execute: async (env: Env) => {
-    const { TRELLO_APP_KEY, TRELLO_APP_TOKEN, TP_SERVER_URL } = env;
+    const { TRELLO_APP_KEY, TRELLO_APP_TOKEN, TRELLO_TODO_LIST_ID, TRELLO_BUY_LIST_ID, TP_SERVER_URL } = env;
 
     const client = new Trello(TRELLO_APP_KEY, TRELLO_APP_TOKEN);
 
@@ -69,8 +73,8 @@ export const printT0d0s: C0mmand = {
         }
       })
     );
-    const onHoldCards = await client.getCardsOnList('5f77240f0518c0167b84725e');
-    const buyStuffCards = await client.getCardsOnList('5f7723264eca846e30d3bb41');
+    const onHoldCards = await client.getCardsOnList(TRELLO_TODO_LIST_ID);
+    const buyStuffCards = await client.getCardsOnList(TRELLO_BUY_LIST_ID);
 
     const instructions = template({
       date: getNiceDate(),
@@ -96,6 +100,7 @@ export const printT0d0s: C0mmand = {
       );
       return data;
     } catch (e) {
+      console.error(e);
       console.log('Print fail');
     }
   }
