@@ -1,10 +1,14 @@
+#include <Arduino.h>
 #include <WiFi.h>
 #include <LiquidCrystal_I2C.h>
 
-const char* ssid = "EGGS";
-const char* password = "quaintbreeze183";
-const char* c0mmandBaseUrl = "http://192.168.1.50:10010";
-//const char* c0mmandBaseUrl = "http://192.168.1.13:3000";
+#include "Display.h"
+#include "C0mmandService.h"
+#include "RotarySwitch.h"
+#include "config.h"
+
+#define ROTARY_PIN 33
+#define BUTTON_PIN 26
 
 int frame = 0;
 int c0mmandId = 0;
